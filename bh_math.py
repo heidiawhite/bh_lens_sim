@@ -37,16 +37,7 @@ class BlackHole:
     def __init__(self):
         """Main class"""
         self.init_var()
-
-        try:
-            #abs_path = os.path.abspath(os.path.dirname(sys.argv[0]))
-            #folder = os.path.join(abs_path, 'images')
-            img_name = os.path.join('images', 'milkyway.jpg')
-            self.open(img_name, size=self.axe_X)
-
-        except FileNotFoundError:
-            print("milkyway image not found, creating a default image")
-            self.create_default_image(size=self.axe_X)
+        self.img_original = None
 
     def init_var(self):
         """Initialize most variables."""
@@ -175,6 +166,14 @@ class BlackHole:
         return self.img_debut
 
     def compute(self, Rs, D):
+        if self.img_original is None:
+            try:
+                img_name = os.path.join('images', 'milkyway.jpg')
+                self.open(img_name, size=self.axe_X)
+            except FileNotFoundError:
+                print("milkyway image not found, creating a default image")
+                self.create_default_image(size=self.axe_X)
+        
         """main method used to compute the black hole deformation and apply it
         on a image."""
         self.Rs = Rs
