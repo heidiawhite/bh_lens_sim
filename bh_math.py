@@ -32,7 +32,7 @@ from PIL import ImageDraw
 
 M_sun = 1.98840987e+30  # solar mass in Kg taken from AstroPy
 
-class BlackHole(object):
+class BlackHole:
     """Main class"""
     def __init__(self):
         """Main class"""
