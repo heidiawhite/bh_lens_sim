@@ -126,7 +126,7 @@ class BlackHole:
         """Open an equirectangular image.
         Can resize it with the size option.
         """
-        print("Openning %s" % img_name)
+        print("Opening %s" % img_name)
         self.img_original = Image.open(img_name, mode='r')
         self.img_name = img_name
 
@@ -179,9 +179,11 @@ class BlackHole:
         self.Rs = Rs
         self.D = D
         self.M = (self.Rs * c**2 * au) / (2 * G * M_sun)
-        print("M = %.1e M☉\t%.2e Kg" % (self.M, self.M*M_sun))
-        print("Rs = %s ua\t%.2e m" % (self.Rs, self.Rs*au))
-        print("D = %s ua\t%.2e m\n" % (self.D, self.D*au))
+        print("Black Hole Data")
+        print("----------------------------------")
+        print("M = %.1e Msun\t%.2e kg" % (self.M, self.M*M_sun))
+        print("Rs = %s AU\t%.2e m" % (self.Rs, self.Rs*au))
+        print("D = %s AU\t%.2e m\n" % (self.D, self.D*au))
 
         vrai_debut = time.process_time()
 
@@ -200,19 +202,19 @@ class BlackHole:
                 xmax = np.max(seen_angle)
                 seen_angle_splin = np.linspace(xmin, xmax, 20001)
                 deviated_angle_splin = self.interpolation(seen_angle_splin)
-                plt.figure('Trajectories interpolation')
-                plt.clf()
-                plt.title("Light deviation interpolation", va='bottom')
-                plt.xlabel('seen angle(°)')
-                plt.ylabel('deviated angle(°)')
-                plt.plot(seen_angle, deviated_angle, 'o')
-                plt.plot(seen_angle_splin, deviated_angle_splin)
-                plt.grid()
-                #plt.savefig('interpolation.png', dpi=250, bbox_inches='tight')
-                plt.draw()
+                # plt.figure('Trajectories interpolation')
+                # plt.clf()
+                # plt.title("Light deviation interpolation", va='bottom')
+                # plt.xlabel('seen angle(°)')
+                # plt.ylabel('deviated angle(°)')
+                # plt.plot(seen_angle, deviated_angle, 'o')
+                # plt.plot(seen_angle_splin, deviated_angle_splin)
+                # plt.grid()
+                # #plt.savefig('interpolation.png', dpi=250, bbox_inches='tight')
+                # plt.draw()
 
-            print("last angle", seen_angle[-1])
-            print("trajectories time: %.1f" % (time.process_time()-vrai_debut))
+            # print("last angle", seen_angle[-1])
+            # print("trajectories time: %.1f" % (time.process_time()-vrai_debut))
 
             img_matrix_x, img_matrix_y = self.create_matrices()
 
@@ -228,7 +230,7 @@ class BlackHole:
         self.img2 = self.img_pixels(self.img_debut)
 
         vrai_fin = time.process_time()
-        print("\nglobal computing time: %.1f\n" % (vrai_fin-vrai_debut))
+        print("\nglobal computing time (seconds): %.1f\n" % (vrai_fin-vrai_debut))
 
         if self.display_blackhole:
             self.plot()
@@ -318,7 +320,7 @@ class BlackHole:
             i = i/10
         i = 10*i
         alpha_min += i
-        print("alpha_min: %s [%s, %s]" % (alpha_min, alpha_min-i, alpha_min))
+        #print("alpha_min: %s [%s, %s]" % (alpha_min, alpha_min-i, alpha_min))
 
         return alpha_min
 
@@ -411,12 +413,12 @@ class BlackHole:
         y = np.arange(0, self.axe_Y)
         xv, yv = np.meshgrid(x, y)
 
-        print("\nmatrix creation estimation time: %.1fs" % (1e-6*self.axe_X*self.axe_Y))
+        #print("\nmatrix creation estimation time: %.1fs" % (1e-6*self.axe_X*self.axe_Y))
 
         img_matrix_x, img_matrix_y = self.find_position(xv, yv)
 
         fin = time.process_time()
-        print("matrix created in time: %.1f s" % (fin-debut))
+        #print("matrix created in time: %.1f s" % (fin-debut))
         return img_matrix_x, img_matrix_y
 
     def open_matrices(self):
@@ -498,7 +500,7 @@ class BlackHole:
         return xv2, yv2
 
     def gif(self, nbr_offset=1):
-        """Apply seveal offset and save each images to be reconstructed
+        """Apply several offsets and save each images to be reconstructed
         externaly to make agif animation of a moving black hole."""
         file_name, extension = return_folder_file_extension(self.img_name)[1:]
 
@@ -553,12 +555,7 @@ class BlackHole:
             print("No black hole deformation in the memory, displayed the original image instead.")
             self.ax.imshow(self.img_debut)
 
-        self.fig.canvas.set_window_title('Black hole')
-        self.ax.set_title("scrool to zoom in or out \nright click to add an offset in the background \nleft click to refresh image \n close the option windows to stop the program")
-        self.fig.canvas.mpl_connect('scroll_event', self.onscroll)
-        self.fig.canvas.mpl_connect('button_press_event', self.onclick)
-        self.fig.canvas.mpl_connect('axes_leave_event', self.disconnect)
-        self.fig.canvas.mpl_connect('axes_enter_event', self.connect)
+        self.ax.set_title("Output Image")
 
         self.draw()
 
@@ -593,19 +590,6 @@ class BlackHole:
         else:
             print("No image to save")
 
-    def onscroll(self, event):
-        """Zoom in or out the canvas when using the scrool wheel."""
-        if self.out_graph is False:
-            self.zoom += 10*event.step
-
-            if self.zoom >= self.axe_X/2/self.FOV_img*self.FOV_img_Y:
-                self.zoom = self.axe_X/2/self.FOV_img*self.FOV_img_Y
-
-            if self.zoom <= 0:
-                self.zoom = 0
-
-            self.draw()
-
     def draw(self):
         """Draw the black hole on the canvas by setting the axes need to match
         the zoom setting."""
@@ -625,31 +609,6 @@ class BlackHole:
         self.ax.set_ylim((down_side, up_side))
 #        print((self.left_side, self.right_side), (self.down_side, self.up_side))
         self.fig.canvas.draw()
-
-    def onclick(self, event):
-        """Use to apply an offset when right clicking. Will be replace by a
-        Slider from matplotlib."""
-        # OPTIMIZE: create bar to offset and del this function
-        if self.out_graph is False:
-
-            if (event.button == 3 and event.xdata >= 0
-                    and event.xdata <= self.axe_X):
-                self.offset_X += self.offset_X2
-                self.offset_X2 = int(self.axe_X/2 - event.xdata - self.offset_X)
-                self.img_debut = img_offset_X(self.img_debut, self.offset_X2)
-                self.img2 = self.img_pixels(self.img_debut)
-                self.ax.imshow(self.img2)
-                self.fig.canvas.draw()
-
-    def disconnect(self, event):
-        """Used to known when the mouse is outside the black hole canvas."""
-        self.out_graph = True
-
-
-    def connect(self, event):
-        """Used to known when the mouse is inside the black hole canvas."""
-        self.out_graph = False
-
 
 class BlackHoleGUI:
     """GUI controling a blackhole instance."""
