@@ -529,7 +529,10 @@ class BlackHole:
                 img2 = img_offset_X(img2, -offset_X_tot)  # if want a fixed background and moving black hole
 
             if nbr_offset != 1 and a < nbr_offset: #if need to save real offset, put offset_x in global and offset_x+offset_x2+offset_x_tot in save name
-                image_name_save = "offset_imgs/%s_D=%s_Rs=%s_size=%s_offset=%i%s" % (file_name, self.D, self.Rs, self.axe_X, offset_X_tot+self.offset_X+self.offset_X2, extension)
+                #image_name_save = "%s_D=%s_Rs=%s_size=%s_offset=%i%s" % (file_name, self.D, self.Rs, self.axe_X, offset_X_tot+self.offset_X+self.offset_X2, extension)
+                myoffset = str(a).zfill(3)
+                #print(myoffset)
+                image_name_save = "%s_D=%s_Rs=%s_size=%s_%s%s" % (file_name, self.D, self.Rs, self.axe_X, myoffset, extension)
                 img2.save(image_name_save)
                 #print("Save: "+image_name_save)
 
