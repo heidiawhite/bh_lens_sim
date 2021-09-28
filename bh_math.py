@@ -34,7 +34,7 @@ M_sun = 1.98840987e+30  # solar mass in Kg taken from AstroPy
 
 class BlackHole(object):
     """Main class"""
-    def __init__(self,img_name):
+    def __init__(self):
         """Main class"""
         self.init_var()
 
