@@ -244,10 +244,10 @@ class BlackHole:
 
         if self.display_trajectories is True:
             plt.figure('Trajectories plan')
-            plt.clf() #clear the graph to avoir superposing data from the same set (can be deactivated if need to superpose)
-            ax = plt.subplot(111, projection='polar') #warning if use python in ligne (!= graphical) graphs got superposed
-            ax.set_title("light trajectories close to a black hole\n", va='bottom')
-            ax.set_xlabel('R(UA)')
+            plt.clf() #clear the graph to avoid superposing data from the same set (can be deactivated if need to superpose)
+            ax = plt.subplot(111, projection='polar') #warning if using python in line (!= graphical) graphs got superposed
+            ax.set_title("Light Ray Trajectories Approaching a Black Hole\n", va='bottom')
+            ax.set_xlabel('R(AU)')
             plt.ylabel('phi(°)\n\n\n\n', rotation=0)
             ax.set_rlim((0, 4*self.D))
             ax.set_rlabel_position(-90)
@@ -500,14 +500,13 @@ class BlackHole:
         return xv2, yv2
 
     def gif(self, nbr_offset=1):
-        """Apply several offsets and save each images to be reconstructed
-        externaly to make agif animation of a moving black hole."""
+        """Apply seveal offset and save each images to be reconstructed externaly to make agif animation of a moving black hole."""
         file_name, extension = return_folder_file_extension(self.img_name)[1:]
 
         offset_X_temp = 0  # locals, relative to img2 given, not absolute
         offset_X_tot = 0
         time_estimate = 2.2e-8*self.axe_X*self.axe_Y*(nbr_offset+1)
-        print("\ntotal offsets estimation time: %.1f" % (time_estimate))
+        #print("\ntotal offsets estimation time: %.1f" % (time_estimate))
 
         if nbr_offset == 1:  # avoid two offsets for a single image
             nbr_offset = 0
@@ -530,9 +529,9 @@ class BlackHole:
                 img2 = img_offset_X(img2, -offset_X_tot)  # if want a fixed background and moving black hole
 
             if nbr_offset != 1 and a < nbr_offset: #if need to save real offset, put offset_x in global and offset_x+offset_x2+offset_x_tot in save name
-                image_name_save = "%s_D=%s_Rs=%s_size=%s_offset=%i%s" % (file_name, self.D, self.Rs, self.axe_X, offset_X_tot+self.offset_X+self.offset_X2, extension)
+                image_name_save = "offset_imgs/%s_D=%s_Rs=%s_size=%s_offset=%i%s" % (file_name, self.D, self.Rs, self.axe_X, offset_X_tot+self.offset_X+self.offset_X2, extension)
                 img2.save(image_name_save)
-                print("Save: "+image_name_save)
+                #print("Save: "+image_name_save)
 
             if a < nbr_offset:
                 offset_X_temp = int(self.axe_X/nbr_offset) #at the end to have offset=0 for the first iteration
@@ -546,7 +545,9 @@ class BlackHole:
     def plot(self):
         """Plot the black hole and connect functions to the canvas."""
         self.fig = plt.figure('black hole')
-        self.fig.clf() #clear the graph to avoir superposing data from the same set (can be deactivated if need to superpose)
+        scale_factor = self.axe_X/self.axe_Y
+        self.fig.set_size_inches(15., scale_factor*15.)
+        self.fig.clf() #clear the graph to avoid superposing data from the same set (can be deactivated if need to superpose)
         self.ax = plt.subplot()
 
         if self.img2 is not None:
@@ -556,7 +557,6 @@ class BlackHole:
             self.ax.imshow(self.img_debut)
 
         self.ax.set_title("Output Image")
-
         self.draw()
 
     def img_pixels(self, img_debut):
@@ -607,6 +607,8 @@ class BlackHole:
 
         self.ax.set_xlim((left_side, right_side))
         self.ax.set_ylim((down_side, up_side))
+        self.ax.set_xticks([])
+        self.ax.set_yticks([])
 #        print((self.left_side, self.right_side), (self.down_side, self.up_side))
         self.fig.canvas.draw()
 
