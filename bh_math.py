@@ -513,8 +513,8 @@ class BlackHole:
 
         # +1 for final offset to set back image to initial offset
         for a in range(nbr_offset+1):
-            if a < nbr_offset:
-                print("\n%s/%s\toffset: %s" % (a+1, nbr_offset, offset_X_tot))
+            # if a < nbr_offset:
+            #     print("\n%s/%s\toffset: %s" % (a+1, nbr_offset, offset_X_tot))
 
             self.img_debut = img_offset_X(self.img_debut, offset_X_temp)
 
@@ -541,7 +541,8 @@ class BlackHole:
                 offset_X_tot += offset_X_temp
 
             elif nbr_offset > 1:
-                print("\nOffset reset to %i" % (offset_X_tot % self.axe_X))
+                #print("\nOffset reset to %i" % (offset_X_tot % self.axe_X))
+                print("Writing image frames for GIF file!")
 
         self.img2 = img2
 
