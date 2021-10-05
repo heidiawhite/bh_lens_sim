@@ -181,7 +181,7 @@ class BlackHole:
         self.M = (self.Rs * c**2 * au) / (2 * G * M_sun)
         print("Black Hole Data")
         print("----------------------------------")
-        print("M = %.1e Msun\t%.2e kg" % (self.M, self.M*M_sun))
+        print("M = %.1e Solar masses\t%.2e kg" % (self.M, self.M*M_sun))
         print("Rs = %s AU\t%.2e m" % (self.Rs, self.Rs*au))
         print("D = %s AU\t%.2e m\n" % (self.D, self.D*au))
 
